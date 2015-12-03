@@ -1,0 +1,19 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{GPIO}]\begingroup General purpose input output\nomeqref {0}
+		\nompageref{7}
+  \item [{IoT}]\begingroup Internet of Things\nomeqref {0}
+		\nompageref{3}
+  \item [{NoSQL}]\begingroup not only SQL\nomeqref {0}\nompageref{4}
+  \item [{RDBMS}]\begingroup Relational Database Management Systems\nomeqref {0}
+		\nompageref{4}
+  \item [{REST}]\begingroup Representational State Transfer\nomeqref {0}
+		\nompageref{7}
+  \item [{SPI}]\begingroup Serial Peripheral Interface\nomeqref {0}
+		\nompageref{7}
+  \item [{SQL}]\begingroup Structured Query Language\nomeqref {0}
+		\nompageref{4}
+
+\end{thenomenclature}
