@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.10.20)  13 DEC 2015 15:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.10.20)  13 DEC 2015 16:45
 entering extended mode
  restricted \write18 enabled.
  Source specials enabled.
@@ -715,18 +715,18 @@ File: uni-32.def 2013/05/13 UCS: Unicode data U+2000..U+20FF
 ) [23
 
 ] [24]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 839.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 856.
 
 [25
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 839.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 856.
  (./document.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 839.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 839.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 856.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 856.
 Package rerunfilecheck Info: File `document.out' has not changed.
 (rerunfilecheck)             Checksum: EDF84F87DD6EAE7C6819FD2A939D8951;2252.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 839.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 856.
  ) 
 Here is how much of TeX's memory you used:
  11814 strings out of 493105
@@ -748,7 +748,7 @@ msfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.
 pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on document.pdf (26 pages, 526021 bytes).
+Output written on document.pdf (26 pages, 526476 bytes).
 PDF statistics:
  591 PDF objects out of 1000 (max. 8388607)
  539 compressed objects within 6 object streams

@@ -679,7 +679,7 @@ rm -rf port/node_modules
 docker build -t seeeb/port .
 docker pull mongo
 docker run --name thisMongo -v ~/port/mongoVol:/data/db -it -d mongo:latest
-docker run --rm --name nodejs --link thisMongo:db -p 80:80 -it -v ~/port/port:/www seeeb/port
+docker run -d --name nodejs --link thisMongo:db -p 80:80 -it -v ~/port/port:/www seeeb/port
 \end{lstlisting}
 \begin{itemize}
 \item Line 1 define that its a script which should be run by bash
@@ -688,10 +688,10 @@ docker run --rm --name nodejs --link thisMongo:db -p 80:80 -it -v ~/port/port:/w
 \item Line 6 Removes all the modules from the node application to forse a clean install of all the modules.
 \item Line 7 builds a docker images named seeeb/port using the Dockerfile. This docker images run the node application and will be explained in the next section.
 \item Line 8 pull the latest official mongo image from the docker hub.
-\item Line 9 Starts a container of the mongo images, name it thisMongo and maps the host folder ~/port/mongoVol in the container folder /data/db.
+\item Line 9 Starts a container of the mongo images, name it thisMongo and maps the host folder ~/port/mongoVol in the container folder /data/db. The -d option demonize the container so it is runing in the background.
 \item Line 10 Starts a container using the images seeeb/port and name it nodejs.
   \begin{itemize}
-  \item "--rm" tell docker to destroy the container when exiting.
+  \item "-d" tell docker to demonize the container. If you want to see the output from node, this should be removed
   \item "--link thisMongo:db" tell that this container should link to the container nammed thisMongo with the alias db. Note that inside the node application when defining the adress to the mongo database we only need to specify "db" as the adress.
   \item "-p 80:80" map the external port 80 of the host system to external port 80 of the the node container
   \item "it" tell that we want to interact with the container and get a shell. in this way the output from the node application is printed to the screen of the host system.
@@ -733,16 +733,33 @@ The function can be tested by sending json requests using Chrome Postman to the 
 \item Login: Which authenticated a user
 \end{itemize}
 
-A user account with the username "admin" and password "nodeJSkursus" can be used to test the system. As this server is only running to show the system is working it is ok to do all kinds of test like adding users, updating berths status, etc.
+A user account with the username "admin" and password "nodeJSkursus" can be
+used to test the system. As this server is only running to show the system is
+working it is ok to do all kinds of test like adding users, updating berths
+status, etc.
+Also note that under add user and login some fields is defined in the bottom
+that is bind to response message and the stuff you enter in the form. This is to
+show what goes on under the hood. This would ofcourse not be there in a
+production version of the system.
 
 For testing the updateBerth API a simulater has been developed using Java.
-It first choose some random berth id's and then start sending random status update messages simulating status change. This will result in some new berth are being added to the system and that those new berth will be updated randomly. The code of the simulator is handed in together whit this report.
+It first choose some random berth id's and then start sending random status
+update messages simulating status change. This will result in some new berth
+are being added to the system and that those new berth will be updated
+randomly. The code of the simulator is handed in together whit this report.
 \clearpage
 \section{Conclusion}
 The aim of the project is to show how a realistic Node.js application can be build also taking into account performance and scalability. It has been showed that Node.js together with MongoDB is a high performance system that easely scale. Looking at the Life in Vista Prints test \cite{mongotest} comparing Mongo with a SQL database it
 is clear that the mongo database is faster than a realtional database when
 working with object data.
-There some things that would need improvement for an system put into production. This is that passwords should never be stored in the database as clear tekst. The password strength should also be checked when creating a user and it should not be allowed to have a week password. Right now you can actually create a user with no username or password. It is also important that the access to the side is using ssl. If not, everybody can grap tokens or passwords flying over the network. 
+There some things that would need improvement for an system put into
+production. This is that passwords should never be stored in the database as
+clear tekst. The password strength should also be checked when creating a user
+and it should not be allowed to have a week password. Right now you can
+actually create a user with no username or password. It is also important that
+the access to the side is using ssl. If not, everybody can grap tokens or
+passwords flying over the network. Another thing that should also be protected
+with JWT is the updateBerth API which at the moment can be mish used by anyone 
 
 All in all this project conclude and show how Node.js, Mongo and Express can be used to build a backend system with high performance and scalerbility
 \clearpage
