@@ -665,47 +665,87 @@ npm install
 
 When this script is run it first changes directory in to a the folder /www on the system. This is were the application should be placed. Then all dependencies are installed. The next line which is commented out can be used to run the application in production instead of development mode. Running in production mode make some changes to how the application is running. Eg. error messages is not send to the clients and the performance is also better.
 Last line run the application.
-
+\clearpage
 \subsection{Docker Mongo and runsystem.sh}
-The 
+The application is run using the docker echo system. This is all handeled by the runSystem.sh script. Downloading the project and running the script on a system that has docker installed will handle all the setup and running the application. The code in the file is showed below.
 
+\begin{lstlisting}[language=javascript]
+#!/bin/bash
+# uncomment all lines below to make a fresh build of the system
+
+docker stop $(sudo docker ps -a -q)
+docker rm $(sudo docker ps -a -q)
+rm -rf port/node_modules
+docker build -t seeeb/port .
+docker pull mongo
+docker run --name thisMongo -v ~/port/mongoVol:/data/db -it -d mongo:latest
+docker run --rm --name nodejs --link thisMongo:db -p 80:80 -it -v ~/port/port:/www seeeb/port
+\end{lstlisting}
+\begin{itemize}
+\item Line 1 define that its a script which should be run by bash
+\item Line 4 use the docker ps command to get all running containers and fetch it to the docker stop command. In this way we are shure no other containers are running.
+\item Line 5 Remove all the containers. (remeber a container is an instance of a docker image)
+\item Line 6 Removes all the modules from the node application to forse a clean install of all the modules.
+\item Line 7 builds a docker images named seeeb/port using the Dockerfile. This docker images run the node application and will be explained in the next section.
+\item Line 8 pull the latest official mongo image from the docker hub.
+\item Line 9 Starts a container of the mongo images, name it thisMongo and maps the host folder ~/port/mongoVol in the container folder /data/db.
+\item Line 10 Starts a container using the images seeeb/port and name it nodejs.
+  \begin{itemize}
+  \item "--rm" tell docker to destroy the container when exiting.
+  \item "--link thisMongo:db" tell that this container should link to the container nammed thisMongo with the alias db. Note that inside the node application when defining the adress to the mongo database we only need to specify "db" as the adress.
+  \item "-p 80:80" map the external port 80 of the host system to external port 80 of the the node container
+  \item "it" tell that we want to interact with the container and get a shell. in this way the output from the node application is printed to the screen of the host system.
+  \item "-v "/port/port:/www" mounts the host folder ~/port/port in the container folder www.
+  \end{itemize} 
+\end{itemize}
+
+Its important that the project is placed in the home folder of the host system because the shell script expect to find the files here.
+
+\subsubsection{Dockerfile}
+The Dockerfile defines the node images. See the code below
+
+\begin{lstlisting}[language=javascript]
+FROM ubuntu:14.04
+
+RUN apt-get update && apt-get install -y git python build-essential curl nano wget libkrb5-dev
+RUN wget https://nodejs.org/dist/v4.2.1/node-v4.2.1-linux-x64.tar.gz
+RUN sudo tar -C /usr/local --strip-components 1 -xzf node*
+
+RUN npm install express -g
+RUN npm install express-generator -g
+RUN npm install -g nodemon
+
+CMD /www/start.sh
+EXPOSE 80:80
+\end{lstlisting}
+
+The file is prety much self explanatory. First we specify to start from an uuntu 14.04, rhen all the the dependen packages is installed. Then express and nodemon are installed globaly.
+The line $CMD /www/start.sh$ tell that this script should be run when the system has started.
+$EXPOSE 80:80$ Make port 80 availerble as a port that can be acced on the container.
+\subsubsection{hosting}
+The project is hosted on an Amacon EC2 ubuntu server. And a dns record pointing the subdomain port.lapela.dk to it has been seed.
+
+The function can be tested by sending json requests using Chrome Postman to the server or by using the angular frontend application by accessing the the address in a browser. The Angular application provide four functions which is the following
+\begin{itemize}
+\item Berth: Whitch shows all the berth and their status
+\item Users: Which shows all the users if you are outhenticated
+\item Add user: Which let you add a user if you are loged in
+\item Login: Which authenticated a user
+\end{itemize}
+
+A user account with the username "admin" and password "nodeJSkursus" can be used to test the system. As this server is only running to show the system is working it is ok to do all kinds of test like adding users, updating berths status, etc.
+
+For testing the updateBerth API a simulater has been developed using Java.
+It first choose some random berth id's and then start sending random status update messages simulating status change. This will result in some new berth are being added to the system and that those new berth will be updated randomly. The code of the simulator is handed in together whit this report.
 \clearpage
 \section{Conclusion}
-encrypt password
-services instead of logic in the controlers.
-ssl sertificate
-
-The aim of the project is to purpose how a realistic IoT system can be
-implemented taking all parts into consideration. Focus has been on how the
-devices can be designed so they can run on battery for many years and how they
-communicate. It has been show that by using the CC2530 SoC from Texas
-Instruments together with flipdots it is fully possible to power the devices
-with a relatively small battery. It has been shown that the ZigBee protocol can
-be used to provide realiable transfer in a mesh networking topology so a network
-can be spanned over a distance many times longer than each device range. Also it
-has been shown that a zigbee network can contain up to $2^{64}$ bit addresses
-which is more than enough addresses for any imaginable size of network. This
-conclude that bulding the devices is posible with the purposed technology.
-
-Even so the code for the gateway runing on the Raspberry Pi is not finalized, it
-is shown connecting a CC2530 to the Raspberry Pi can work as a gateway to
-the internet allowing communication with the devices over the internet.
-
-An important part of the application servers performance is the database.
-Locking at the Life in Vista Prints test comparing Mongo with a SQL database it
+The aim of the project is to show how a realistic Node.js application can be build also taking into account performance and scalability. It has been showed that Node.js together with MongoDB is a high performance system that easely scale. Looking at the Life in Vista Prints test \cite{mongotest} comparing Mongo with a SQL database it
 is clear that the mongo database is faster than a realtional database when
 working with object data.
+There some things that would need improvement for an system put into production. This is that passwords should never be stored in the database as clear tekst. The password strength should also be checked when creating a user and it should not be allowed to have a week password. Right now you can actually create a user with no username or password. It is also important that the access to the side is using ssl. If not, everybody can grap tokens or passwords flying over the network. 
 
-It is show that useing MongoDB together with Nodejs can handle a very high
-load and that it easely scale when there is need for handling a higher load.
-
-All in all this project conclude and show how one IoT system can be designed. 
+All in all this project conclude and show how Node.js, Mongo and Express can be used to build a backend system with high performance and scalerbility
 \clearpage
-
-
-
-  The sensors and ZigBee gateway are simulated by a java program which
-  continusly hit the backend API wiht jason data. 
 
 \begin{thebibliography}{9}
 

@@ -28,5 +28,7 @@
 \BOOKMARK [3][-]{subsubsection.4.2.6}{Views}{subsection.4.2}% 28
 \BOOKMARK [3][-]{subsubsection.4.2.7}{bin/www and start.sh}{subsection.4.2}% 29
 \BOOKMARK [2][-]{subsection.4.3}{Docker Mongo and runsystem.sh}{section.4}% 30
-\BOOKMARK [1][-]{section.5}{Conclusion}{}% 31
-\BOOKMARK [1][-]{section.6}{References}{}% 32
+\BOOKMARK [3][-]{subsubsection.4.3.1}{Dockerfile}{subsection.4.3}% 31
+\BOOKMARK [3][-]{subsubsection.4.3.2}{hosting}{subsection.4.3}% 32
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 33
+\BOOKMARK [1][-]{section.6}{References}{}% 34
