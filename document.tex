@@ -1,6 +1,8 @@
 \documentclass[a4paper,12pt,english]{article}
 \usepackage[nottoc,numbib]{tocbibind}
-\usepackage[utf8]{inputenc}
+
+\usepackage[utf8x]{inputenc}
+
 \usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -26,18 +28,45 @@
 \usepackage{xcolor}
 \apptocmd{\sloppy}{\hbadness 10000\relax}{}{}
 \usepackage{nomencl}
+\pagenumbering{roman}
+
 \makenomenclature
+
 
 \graphicspath{ {/} }
 \pagestyle{fancy}
-\lstset{language=C,
-                basicstyle=\ttfamily,
-                basicstyle=\small,
-                keywordstyle=\color{blue}\ttfamily,
-                stringstyle=\color{red}\ttfamily,
-                commentstyle=\color{green}\ttfamily,
-                morecomment=[l][\color{magenta}]{\#},
-                breaklines=true
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstdefinelanguage{javascript}{
+  keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  sensitive=true
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
 }
 
 \setcounter{secnumdepth}{4}
@@ -54,7 +83,7 @@ Sebastian O. Jensen}}
 
 
 \begin{document}
-\pagenumbering{Alph}
+
 \begin{titlepage}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.4mm}}
@@ -81,7 +110,7 @@ RESTfull, Web service}\\[0.4cm]
 \subsection{Abbreviations}
 \renewcommand{\nomname}{}
 \renewcommand{\pagedeclaration}[1]{}
-\pagestyle{empty}
+
 \printnomenclature[3cm]
 \clearpage
 \section{Introduction}
@@ -104,10 +133,9 @@ following items
   \item Frontend developed in AngularJS.
 \end{enumerate}
 
-This project is about the backend system (3) does only
-loosely talk about the frontend (5) when this is needed to describe and show the
-functionality of the backend. The devices (1) and gateway (1) will not be
-described in this repport. 
+As this project is about the backend system (3) this report does only
+describe the other parts when this is needed to describe the functionality of
+the backend.
 
 \subsection{Overview of this report}
 In section 1.3 is the background for the system described. Section 2 will give a
@@ -116,168 +144,537 @@ to implement the backend. Section 3 will give a technical description on the
 implementation. Section 4 contains the conclusion.
 
 \subsection{Background}
-Internet of Things is the term that describes networks of physical devices that
+Internet of Things is a term that describes networks of physical devices that
 are connected to the Internet. This can be anything like sensors, wearables,
 fridges, heating systems, light balls and what ever could be imagined to
 connect to the Internet.
-As mentioned there is a high growth in the number of these devices. This project
-is about solving a common problem in leisure harbors. 
-In leisure harbors there are a limited number of moorings. Therefor each boat
-owner has his own mooring space. At each mooring space there are a sign which
-can be set to red or green. When the owner leaves the harbor he should set the
-sign to green indicating that the mooring is free to use for guests. If he is
-away for less than a day he can set it to red indicating that the mooring is
-not free to use. When the owner returns home after some days he calls the harbor
-master who then flips the sign to red indicating that the mooring is no longer
-free. A common problem is that the boat owners often don’t set the signs to
-green when they leave the harbor. The reason is that it is easier to let it stay
-red instead of calling the harbor master when returning home. This often results
-in many unused moorings has red signs and makes it difficult for guests to find
-free moorings. Another problem is the time the harbor master uses on flipping
-the signs for people returning home to their berth.
-To solve these problems a system of electronically controlled signs is
-suggested. For more details about the suggested system refer to section 3.1
-
+As mentioned there is a high growth in the number of these devices.
+This project is about solving a common problem in leisure harbors. 
+In leisure harbors there are a limited number of moorings. Therefore it will be
+an advantage if a sailer can see if there are free moorings/berths in a harbor
+before arriving. 
 
 \section{Theoretical background}
+\subsection{REST}
+REST stand for Representational State Transfer. Its a method for designing
+networked applications.
+\nomenclature{REST}{Representational State Transfer}
+One of the most important constraints in REST is that it is stateless. Stateless
+means that every request should contain all information to process the event. In this
+way session state is stored on the client which avoid the need for sessions.
+When using sessions the server will need to hold information
+about all the devices sessions while communicating. This makes it more difficoult to scale the system
+as request can not so easely be load ballanced between multiple servers. Another
+thing is that it put a higer demand on the server if it needs store session
+state for each connected object. Whith rest load balancing is easy it does not
+matter to which server the request is sent as the request holds all information to process the event.
 
 \subsection{Database system}
 \subsubsection{Relational database database}
 Relational Database Management Systems (RDBMS)\nomenclature{RDBMS}{Relational
-Database Management Systems}store date in tables. Access or modification to
-data is done using a Structured Query Language (SQL)
-\nomenclature{SQL}{Structured Query Language}It was developed in the 1970s and
+Database Management Systems} store data in tables. Access or modification to
+data is done using Structured Query Language (SQL)
+\nomenclature{SQL}{Structured Query Language}. It was developed in the 1970s and
 has been the de facto standard for many years. 
 
 \subsubsection{NoSQL database}
 Doing the 2000s an alternative to the RDBMS start to become popular.
-The the NoSQL Databases. NoSQL stands for ``not only SQL''.
-\nomenclature{NoSQL}{not only SQL}There are different ways the NoSQL can store
-data. But what they have in common is that they use an object orientated
-approach. Some of the NoSQL databases are graph databases that are good at
-handling graph data. This could be data in a social network about who is
-connected to who. Other stores data in documents or wide-columns \cite{mongo}. 
+The NoSQL Databases. NoSQL stands for ``not only SQL''. \nomenclature{NoSQL}{not
+only SQL}There are different ways the NoSQL can store data. But what they have
+in common is that they use an object orientated approach. Some of the NoSQL
+databases are graph databases that are good at handling graph data. This could
+be data in a social network about who is connected to who. Other stores data in
+documents or wide-columns \cite{mongo}.
 A NoSQL database is often very easy to scale as the developer can just start up
 another instance of the DB and the DB will then by it self distribute data among
-the DB instances. With SQL DBs it is also possible to to divide data on more
+the DB instances. With SQL DBs it is also possible to divide data on more
 servers. But due to the way data is stored this require more work to do. A NoSQL
 DB is often many times faster than a SQL DB depending on the job it has to do.
+ Three important things to consider when choosing a datastore for a distributed
+ system are the following.
+ 
+ \begin{itemize}
+   \item Consitency.
+   \item Availerbility.
+   \item Partition tolerance.
+ \end{itemize}
+ 
+ Imagine that a database system is replicated out on to servers, server
+ A and B. If data is updated on server A and the same data imediatly being
+ retrieved from B before the data has bein replicated then you will get a wrong
+ result back. While A and B are not fully syncronised the system is in an
+ inconsistant state. Some datastores are higly consitent which means that it is
+ not posible to receive ``wrong'' or not updated data. When a system is higly
+ consistant it means that all notes se and share the same data.
+ Availerbility is about how availerble the system is. A highly availerble
+ system garantie that all request will receive a response whitin short time.
+ A partition tolerant system garantie that the system will continiu to work even
+ when parts of the system is not acceserble do to network link erros.
+ 
+ A theorim called the CAP theorim says that you can only choose to out of the
+ tre properties. This makes sense if you think about it. Imagine a system
+ should continiue to function when the link between server A and B breaks, at
+ the same time be consistent and be able to answer all request imediantly.
+ 
+Each of the three properties can have different importance depending on the
+system. Eg. money transfers need high consitency as this is very transaction
+critical.
 
-\section{Design of the harbor system}
-This section covers how the system is designed. The requirements of the
-system is explained in the first section to give a detailed understanding of
-what the system is intended to do. In section 3.3 the hardware components are
-described and in 3.4 the implementation which cover the software are described.
+\subsection{Node.js}
+Node.js is a javascript runtime environment for developing server side
+aplication. It use googles V8 engine. Traditionaly javascript was only being
+used as a scripting language on the client side. But Node.js makes javascript
+availerble on the serverside as well. What makes node.js speciel is its
+architecture. Its single threded which means that it can only do one thing
+at a time and has one call stack. Imagine what happens when a resource
+requireing task is being executed on the stack. Then the program can't do
+anything else. This is called bloking. To avoid bloking the resource requireing
+task can be handed over to node.js underlying c++ APIs where the task will be
+proccesed outside node.js call stack. When handing over the task a callback
+function also need to be provided. When the task is done the callback function
+is being put on the callback queue. When there are no tasks on the call
+stack, tasks from the callback queue will be processed. This mecanisem is
+called the eventloop. And its important to never block the eventloop. By
+blooking the event loop is happening if a resource requireing job is
+handeled syncroious in the node application. Instead the job should be
+handeled asyncrone whit the callback feture. This architecture makes node.js
+extreamly fast and able to handle many concurent connections compared to other
+serverside platforms. If REST is used in combination with load balance between
+more servers the system if very powerfull and easely scalerble. Therefore it is
+perfect for applications where there is a high load.
 
-\subsection{Requirements}
-The functional requirements of the system is as follow.
-
-\begin{itemize}
-	\item The signs should automatically turn green when a boat leaves the mooring
-	\item The signs should be operated from a remote platform. E.g. a web platform
-	\item The signs should be wireless controlled and battery powered as it is
-	      complicated and expensive to do cabling in the harbors.
-	\item Each sign should be able to hold power for minimum of 7 years.
-\end{itemize}
-
-There are
-many possibilities for adding functionality to the system such as setting a
-predefined time when a sign should flip and let guest see which moorings is
-free and for how long. But these functionalities should be implemented on the
-server side and is therefore not considered important for this project as the
-focus is on the wireless communication between the signs and interconnection
-with the web platform/application server. The reason why these added
-functionalities should be added on the server is for practical reasons. The
-three main reasons are as follow
-
-\begin{itemize}
-  \item It is a lot easier to make changes to the code running on the server
-  then it is to update the code on the devices.
-  \item The devices has limited amount of processing power and memory
-  \item The devices run on battery and therefore should do as little work as
-  possible.
-\end{itemize}  
-  The sensor which should sense if there is a boat at the mooring is simulated
-  by a switch and the red green indication is simulated with an led. Again this is do to
-  keeping the focus around the communication between devices and application
-  server and not on the hardware development.
+\subsection{Docker}
+Docker can in some way be compared to virtual machines but at the same time it
+is very much different. A virtual machine simulate a computer which gives the
+posibility to run another oporating system on top of the host system. Eg. you
+can run a windows oporating system in a virtual machine running on your linux
+system. This gives a high overhead as the computer now needs to run to full
+oporating systems and the simulation done by the virtual machine program also
+take resources. In contrast Docker take an other arcitectual aproach. Docker
+is containers which share the kernel and other parts of the oporation system
+with the host system. In this way they are a lot more lightweight than virtual
+machines. Docker does only run on unix and you can only build unix conainers.
+When starting a docker container you need to have an images that defines
+the container. Eg. you can start an ubuntu 14.04 container from an ubuntu 14.04
+images. There are to ways to obtain an images. One way is to receive it from the
+Docker hub or you can build you own images using a Dockerfile. A docker file can
+be as simple as the single line ``FROM ubuntu:14.04'' which will build an
+ubuntu image. For aditional settings and instalation of programs into the images
+aditional lines is needed. Each line in the Dockerfile is actualy a layer.
+Layers is also shared between different images if they fit for each other. But it will be out
+of the scope of this report to go into all the details about how docker
+handles layers. A docker container is only suposed to run one application. If
+a server needs to run more applications then you are suposed to start one
+container for each application. One of the main advantages of using docker is
+that the containers are easy to move around so time is safed on instaling servers and
+dealing with compability problems because of different enviroments.
+When starting more docker containers on one system they can easely be connected
+by linking them to each other. It is also posible to mount host folders inside
+the containers.
 \clearpage
 
+\section{Design of the backend}
+This section covers the design of the backend system. To give a better
+understanding of the role and responsibilities of the backend an brief
+description of the hole architecture is described in section -----------
+below. Then ---------------------------
+
 \subsection{Architecture}
-A detailed drawing of the architecture can be viewed in fig. \ref{uml} below.
-Explanation of individual components will be given under each section below
+An acrhitecture drawing of the hole system can be viewed in fig. \ref{uml}
+below. 
+
 \begin{figure}[h]
-\includegraphics[scale=0.15	]{img/architecture.png}
+\includegraphics[scale=0.15]{img/architecture.png}
 \caption{Architecture}
 \label{uml}
 \end{figure}
 
-\subsection{Hardware}
- 
-\subsubsection{Raspberry Pi}
-A ZigBee network needs a gateway if the devices on the network need to
-communicate with entities outside the ZigBee network. As we need
-communication between the Signs on the ZigBee network and the application
-server which is on the Internet we will need a gateway which translate
-messages between those to networks. The Raspberry Pi can be used for this. A
-Raspberry Pi is a small single board computer. You can run various Linux
-distribution and even windows 10 on it. The latest version has a 900Mhz
-quad-core ARM CPU and 1GB ram \cite{raspberry}. One thing that is useful
-for this project is the GPIO pins. \nomenclature{GPIO}{General
-purpose input output}The Raspberry Pi has 40 of them and they can be set up to
-be used for different purpose. In this project will use it to interface with a
-CC2530 over SPI \nomenclature{SPI}{Serial Peripheral Interface}. The Raspberry
-Pi will also be connected to the Internet via a wifi dongle. A CC2530 module
-has been bought from a Chinese manufacturer. This module is connected to the
-Raspberry Pi. To connect the pins of the module and be able to make some
-test with flipdots a test PCB has been produced. This PCB allows to easily
-connect the CC2530 module to the Raspberry Pi via jumper cables. The PCB
-connected to the Raspberry Pi can be seen in fig. \ref{pcb}. Some of the signals
-runs over a breadboard with LED's for trouble shouting reasons.
-
-\subsubsection{Application server}
-The application server is setup on a virtual server at Amazon. Amazon has a
-service called EC2 where you can rent servers in the cloud. For this project the
-smallest instance is used. But the service let you easily scale up the server
-is need be.
-
-\subsection{Implementation}
+Here follow a short description of each component
+\begin{itemize}
+  \item Each sensor coorspond to one berth in the harbour. They comunicate via
+  the ZigBee routers to the ZigBee gateway. At regular interval they check if
+  there is a boat at the berth or not. When there are any changes they send a
+  message about the change to the zigbee gateway
+  \item The ZigBee gateway translate the messages from the sensors to a JSON
+  message which holds information about the state (ocupied / not ocupied) of the
+  sensor and the unic id of the sensor. It sends the json message as a PUT
+  messages to the backend. As the message contains both the id and the new state
+  of the sensor it does not break the RESTfull constraints.
+  \item The Node.js application is the heart of the system. The application is
+  responsible exposing webservices and handle the datastore which in this
+  system is a Mongo database. The application expose RESTfull webservices that
+  are being consumed by the ZigBee gateway and the frontend.
+  \item The Mongo database store all the data. The date is user information and
+  the information about the state of each berth.
+  \item The webclient runs the frontend application which is developed in
+  AngularJS. Angular is responsible for render and present the information
+  received from the backend.
+\end{itemize} 
 
 
-\subsubsection{Application Server}
-The Aplication server are not implemented jet but the purposed implementation is
-explained in this section. Only a brief describtion of the pupposed tools are
-provided as it is outside the scope of this project to go into details.
+\subsection{Requirements of the backend}
+To show how the backend work some requirements has been defined and implemented.
+In a full production ready system aditional functianlities is required. These
+aditional requirements will be discused in the sections below and in the
+conclution. But for now we will do with the following recurements.
 
-\paragraph{REST}
-Communication between the Raspberry Pi and the application server should be
-implemented using REST. REST stand for Representational State Transfer.
-\nomenclature{REST}{Representational State Transfer}
-One of the most important constraints in REST is it is stateless which means
-that every request should contain all information to process the event. In this
-session state is stored on the client which avoid the need for sessions. When
-using sessions the server will need to hold information about all the devices
-sessions while communicating. This makes it more difficoult to scale the system
-as request can not so easely be load ballanced between multiple servers. Whith
-rest load balancing is easy it does not matter to which server the request is
-sent as the request holds all information to process the event.
+\begin{itemize}
+	\item Expose a RESTfull api which can receive information about the state of
+	each berth in the port and store the information.
+	\item Expose RESTfull api's which make data accesible to the frontend.
+	\item Be able to handle authentication.
+	\item Let admins update users and see all users.
+\end{itemize}
 
 
-\paragraph{MongoDB}
+\subsubsection{MongoDB}
 As descibed in the theoretical section a NoSQL database is often many times
-faster than a relational database. Mongo is an object related database which
-fits better to our data as each sign can be seen as an object. There are no
-relation we need to deal with between the signs. Therefor Mongo will be the
-database used. \cite{mongotest}
+faster than a relational database\cite{mongotest}. Mongo is an object related
+database which fits our data as each sensor can be seen as an object. Mongo can be used as a
+higly consitant and partition tolerant database. It priorities these proberties
+on the cost of availerbility. When mongo is distributed on more servers the
+consitancy is garantied if you use looking. You can look on different levels
+(document, collection or database level). Locking on collection or
+database level can be usefull when dealing with transactions \cite{mongoManual}
+Therefore Mongo is a good choise to use as a database.
 
-\paragraph{Nodejs}
-Nodejs is a runtime enviorment which is good for building webservice. Code is
-writen in java script. It features an event driven architecture which makes it
-extreamly fast compared to traditional webservers. It easely scales together
-with mongoDB. By scalling it is meant that the application sever easely can be
-scaled verticaly on many simultanious servers with out much settup
 
+\subsubsection{Nodejs}
+Node.sj comes with the NPM package
+manager which can be used to easely install libraries and extensions. For this
+application the Express web framework is used. Express is
+unopinionated about how you are building stuff. This means that you Express
+does not set any rules about how you build you application. This makes it very
+flexible and a good choice for building web APIs. Express feature midleware
+which give the posibilities to devide different task to different middle ware.
+Eg. all request to restricted services can be passed by a midleware which check
+for authentication. Each middleware can be passed the request and response
+objects, which the midleware can access and modify. When the midleware is done
+it passes on the request and response object to the next middleware until a
+response is send to the requesting client.
+Things will be more clear when describing the source code in section
+------------------------------------------------
+
+\section{Implementation}
+\subsection{Folder structure}
+The project is structured in folders. A list of folders and files in the root
+folder is shown in fig \ref{rootFolder}. The Dockerfile and runSystem.sh
+files are related to setting up and running the system. The folder mongoVol
+is a folder where the Mongo database store its data. README.ml is a file used by
+GIT\footnote{GIT is a version control system. It is outside the scope of this
+report to explain details abput git} to describe the project. port.iml is a
+projectfile for and IDE which is not relevant. The folder named port
+contains the Node.js and Express application. The content of this folder wil be
+described in the following section
+
+\begin{center}
+
+\begin{figure}[h]
+\includegraphics[scale=0.2]{img/rootFolder.png}
+\caption{Rootfolder of the project. Blue is folders, white is files, green is
+executerble files.}
+\label{rootFolder}
+\end{figure}
+\end{center}
+
+
+\subsection{Nodejs and Express}
+The project have been build over the MVC pattern by deviding the data model, controler, and the views.
+
+\subsubsection{Folder structure}
+In fig \ref{express} the folder structure of the Node, Express and AngularJS is
+shown.
+The sub folder public contains the frontend AngularJS application. The other
+parts is related to the backend application which will be described in details
+in the next sections.
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[scale=0.45]{img/express.png}
+\caption{Folder structure of Nodejs, Express and AngularJS. Blue is folders,
+white is files, green is executerble files.}
+\label{express}
+\end{figure}
+\end{center}
+
+\subsubsection{NPM, package.json and modules}
+As mentioned erlier Node comes with the package manager NPM. NPM packages can be
+installed globaly on the system or local to the project. Packages which an
+application is dependent on can be specified in the file package json. When you
+install a new package to use in you project you can apply the save atribute to
+the npm command. This will put the dependecy in to the package.json file. You
+can also edit the file manualy. If you enter the command NPM install all
+packages in the file will be installed into the folder node\_modules. The
+content of package.json is showed here.
+
+\begin{lstlisting}[language=javascript]
+{
+  "name": "port",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "ejs": "~2.3.3",
+    "express": "~4.13.1",
+    "jsonwebtoken": "^5.4.1",
+    "mongo": "^0.1.0",
+    "mongodb": "^2.0.48",
+    "morgan": "~1.6.1",
+    "serve-favicon": "~2.3.0"
+  }
+}
+\end{lstlisting}
+
+This application are using 10 modules. Here follow a brief description of each
+module.
+\begin{itemize}
+\item body-parser: Used for parsing the content from and to the body of a html
+messages. In this project it is used for parsing Json data
+\item cookie-parser: Used forhandling cookies
+\item debug: Used by express to write debug messages
+\item ejs: For handling embedded Javascript templates on the frontend. (Not
+used by this project. but it comes with express. Could actually be removed)
+\item express: The web framework
+\item jsonwebtoken: Used for authentication using tokens
+\item mongo: a wrapper for the mongoDB driver. (Is not used in this project)
+\item mongodb: The native driver for Mongo
+\item morgan: Used for logging
+\item serve-favicon: Used for seting the favicon
+\end{itemize}
+
+\subsubsection{aap.js}
+In the file app.js the initialication is defined. A big part of
+this file is generated by express it self. Here an object named app is created
+which is the nerve of the application. Here folow a description of what has
+been changed for this project. In the top of the file, needed modules are
+imported with the requier statement. 2 lines has been added
+
+\begin{lstlisting}[language=javascript]
+var config = require('./config')
+var db = require('./model/db');
+\end{lstlisting}s
+
+The first file config is a file that has been made for holding speciel
+configuration parameeters. For now the only configuration parameeter that is
+handeled here is a secret used to create and validate tokens. But more stuff
+shuld be moved here. Eg. database url and login would be good to place in the
+config file.
+\\
+\\
+The line
+\begin{lstlisting}[language=javascript]
+app.set('superSecret', config.secret); 
+\end{lstlisting}
+Sets a variable in the app object to hold the value of the secret.
+\\\\
+The connection to the database is establised
+\begin{lstlisting}[language=javascript] 
+db.connect('mongodb://db/zigbee', function(err) {
+  if (err) {
+    console.log('Unable to connect to Mongo.')
+    process.exit(1)
+  }
+  else {
+    console.log('Connected to DB')
+  }
+})
+\end{lstlisting}
+As node js is asyncron it is important to mention
+ \\
+The line
+\begin{lstlisting}[language=javascript]
+console.log("running in " + app.get('env') + " mode"); 
+\end{lstlisting}
+Prints the environment mode. This will be explained later.
+
+The line
+\begin{lstlisting}[language=javascript]
+app.use(express.static(__dirname + 'public'));
+\end{lstlisting}
+set the public folder to the path for static content. 
+
+
+\subsubsection{Model}
+The model handles access to the mongo database. The model makes an abstraction to the application about how access to an underlying datastore is done. In this way the application does not need to consentrate on how data is accessed or which data store is used. In the model folder is one file named db.js. It contains the folowing tree functions
+\begin{itemize}
+\item connect: this we saw used in the file app.js for connecting to the database.
+\item get: To tell the state of the database connection
+\item  close: which is used for closing the connection
+\end{itemize}
+In top of the file the mongo driver is imported with the require statement.
+The code can bee viewed in the provide source.
+\\
+The model folder also contains to  other files $apiModel.js$ og $userModel.js$
+
+These files defines functions which update and get data from the database. The functions are exposed the to the controler which is defined in the routes folder. An example of one of the functions is shown below
+
+
+\begin{lstlisting}[language=javascript]
+exports.updateBerth = function(json, callback) {
+  var collection = db.get().collection('berths')
+  collection.replaceOne({_id: json._id}, json, {upsert: true}, function(err, response) {
+    callback(err, response)
+  })
+}
+\end{lstlisting}
+This function updateBerth updates the status of a berth. The {upsert:true} option means that a record shoud be created if it does not exist.
+The rest of the functions can be seen in the source files.
+\\
+The userModel expose the foloving functions.
+\begin{itemize}
+\item all: Return all the users in the system
+\item updateUser: update or create a user
+\item getUser: return a user from the database
+\end{itemize}
+
+See the source files for the full code.
+
+\subsubsection{Routes and authentication}
+The routes control how the application respond to requests. This is done using middleware and pattern maching on the URL and request method.
+In the $app.js$ file the following to lines 
+\begin{lstlisting}[language=javascript] 
+app.use('/', routes);
+app.use('/users', users);
+\end{lstlisting}
+defines that all reguest with the path starting with users should be handeled by the routes deffined in routes/users.js and all other requests should be handeled by routes/index.js
+
+\paragraph{routes/index}
+The routes in routes/index.js defines tree routes. Which is the following
+
+\begin{itemize}
+\item getAllBerths: GET method for returning all the berth and theis status as json
+\item updateBerth: PUT method for updating or creating a berth 
+\item root path: This will send the index file of the angular application.
+\end{itemize}
+
+Below is the code for the updateBerth path
+
+\begin{lstlisting}[language=javascript] 
+router.put('/updateBerth', function(req, res) {
+  json = req.body
+  apiModel.updateBerth(json, function(err, response) {
+    res.json(response);
+  })
+});
+\end{lstlisting}
+As we see this midleware will only mach request of the type PUT and the path /updateBerth. first the body of the request is encoded into the variable json. Next the function updateBerth in the apiModel is called with the json object. When the apiModel has done its magic the response from updating the database is send as the response. This is an other example of using callback. And this is one of the wery important places to use the asyncron aproach, because database access is one thing that can slow down the system if we were to wait for every database task to finalize before doing anything else.
+
+\paragraph{routes/users and authentication}
+The routes in the routes/users.js files is a litle more complicated. The routes are the following.
+
+\begin{itemize}
+\item /authenticate: POST method which Handles authentication
+\item /*: ALL methods. This catch every request and is used to check if a user is authenticated
+\item /getAllUsers: GET method for returning all the users
+\item /updateUser: POST method for adding a user to the system
+\end{itemize}
+
+The first method handles the authentication. The code is provided here
+
+\begin{lstlisting}[language=javascript] 
+router.post('/authenticate', function(req, res, next) {
+  received = req.body;
+
+  userModel.getUser(received, function(err, data) {
+    //if there was no data in the db
+    if(data === undefined){
+      res.json({success: false, message: "Authentication failed"});
+    } else{
+      if (data.password != received.password){
+        res.json({success: false, message: "Authentication failed"});
+      } else {
+        var token = jwt.sign({userType: 'admin'}, req.app.get('superSecret'));
+        res.json({success: true, message: "you are authenticated", token: token})
+      }
+    }
+  })
+});
+\end{lstlisting}
+
+The function expect to receive a username and a password in the body of the post message. The the coorsponding user is retrieved from the database vie the user model. Then there is no coorsponding user or the password of the user does not mach a response message with text "authentication failed" is send back to the client. If the password mach then a jason web token is created and send back. The token consist of tree parts. A header, payload and signature. In the header we can define the usertype, the payload can contain information about expiration and other detail, the signature is used for checking that the token is valid. The signature is hashed using the secret key which was defined in the config file and set in the app variable seperSecret. The header and payload are not encrypted so the client can read the conten by decoding it with the base 64 algorithm. So its important not to put sentitive stuff here in case a hacker sniff the token. When a user is outhenticated it should send the web token with all the request. In this app this is being done by setting the token in the header.\\
+
+When a user access any other path handeled by the user router, the midleware matching the path /* and regardles of the method will catch everything. This midleware is shown below
+
+\begin{lstlisting}[language=javascript] 
+router.all('/*', function(req, res, next) {
+  token = req.headers.token;
+  console.log(token);
+  jwt.verify(token, req.app.get('superSecret'), function(err, decoded) {
+    console.log(decoded) // bar
+    if (decoded){
+      req.authenticated = decoded.userType;
+      next();
+    } else {
+      req.authenticated = null;
+      next();
+    }
+  });
+});
+\end{lstlisting}
+This middleware check if a user is authenticated. It first get the token from the header. Then the token is verified. If the token is valid then a variable named authenticated in the request object is set to the usertype of the user. In this app there are only the usertype admin. If the token is not valid authenticated is set to null. One thing to notice with this middleware is that the callback function get past an object called next. This is used to parse the request on to the next handler. So instead of seting the response the middleware parse on the request which will then be catched by one of the handlers below if any there are any match. Each of the handlers that requiere authentication ofcourse need to be defined below the middleware that checks for authentication. And the handler can then check the authenticated variable and respond depening on the usertype or if no type is set.
+Here is an example of the getallusers handler 
+
+\begin{lstlisting}[language=javascript]
+  if(req.authenticated == 'admin'){
+    userModel.all(function(err, data) {
+      console.log(data);
+      res.json(data);
+    })
+  } else {
+    res.json({message: 'you do not have access to this page'});
+  }
+});
+\end{lstlisting}
+It checks if the user is admin and if so all the users is send back else the messages "you do not have access to this page" is send back.
+
+\subsubsection{Views}
+The view folder contains views which is not used in this project as the frontend is handeled by angularJS. Express defaults to use views in a format called JADE . But for testing it was changed to EJS. But as this is not used in the project. Nothing more will be mentioned about this.
+
+\subsubsection{bin/www and start.sh}
+Running a node application is as simple as runnng the following command
+
+\begin{lstlisting}[language=javascript] 
+node <application>
+\end{lstlisting}
+
+But Express provide an executerble file bin/www. In the top of this file the line
+
+\begin{lstlisting}[language=javascript] 
+#!/usr/bin/env node
+\end{lstlisting}
+defines that when running the file it shuld be run with the node application. Instead of using node this project use nodemon instead. The difference between node and nodemon is that nodemon listen for file changes and automaticaly restart when any changes has been made to the source files. This makes development faster as you do not need to manualy restart node to see changes. Therefore the line has been changed to 
+
+\begin{lstlisting}[language=javascript]
+#!/usr/bin/env nodemon
+\end{lstlisting}
+
+This project use another wrapper $start.sh$ the code in this file is shown below.
+
+\begin{lstlisting}[language=javascript]
+#!/bin/bash
+cd /www
+npm install
+#NODE_ENV=production /www/bin/www
+/www/bin/www
+\end{lstlisting}
+
+When this script is run it first changes directory in to a the folder /www on the system. This is were the application should be placed. Then all dependencies are installed. The next line which is commented out can be used to run the application in production instead of development mode. Running in production mode make some changes to how the application is running. Eg. error messages is not send to the clients and the performance is also better.
+Last line run the application.
+
+\subsection{Docker Mongo and runsystem.sh}
+The 
+
+\clearpage
 \section{Conclusion}
+encrypt password
+services instead of logic in the controlers.
+ssl sertificate
+
 The aim of the project is to purpose how a realistic IoT system can be
 implemented taking all parts into consideration. Focus has been on how the
 devices can be designed so they can run on battery for many years and how they
@@ -305,6 +702,10 @@ load and that it easely scale when there is need for handling a higher load.
 All in all this project conclude and show how one IoT system can be designed. 
 \clearpage
 
+
+
+  The sensors and ZigBee gateway are simulated by a java program which
+  continusly hit the backend API wiht jason data. 
 
 \begin{thebibliography}{9}
 
@@ -342,6 +743,10 @@ MongoDB,
 \emph{What is NoSQL},
 \url{https://www.mongodb.com/nosql-explained}
 
+\bibitem{mongoManual}
+MongoDB manual.
+\emph{Concyrency},
+\url{https://docs.mongodb.org/manual/faq/concurrency/}
 
 \bibitem{mongotest}
 MongoDB vs. SQL Server’s XML Data Type

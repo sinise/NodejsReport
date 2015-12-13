@@ -4,19 +4,29 @@
 \BOOKMARK [2][-]{subsection.1.2}{Overview of this report}{section.1}% 4
 \BOOKMARK [2][-]{subsection.1.3}{Background}{section.1}% 5
 \BOOKMARK [1][-]{section.2}{Theoretical background}{}% 6
-\BOOKMARK [2][-]{subsection.2.1}{Database system}{section.2}% 7
-\BOOKMARK [3][-]{subsubsection.2.1.1}{Relational database database}{subsection.2.1}% 8
-\BOOKMARK [3][-]{subsubsection.2.1.2}{NoSQL database}{subsection.2.1}% 9
-\BOOKMARK [1][-]{section.3}{Design of the harbor system}{}% 10
-\BOOKMARK [2][-]{subsection.3.1}{Requirements}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.2}{Architecture}{section.3}% 12
-\BOOKMARK [2][-]{subsection.3.3}{Hardware}{section.3}% 13
-\BOOKMARK [3][-]{subsubsection.3.3.1}{Raspberry Pi}{subsection.3.3}% 14
-\BOOKMARK [3][-]{subsubsection.3.3.2}{Application server}{subsection.3.3}% 15
-\BOOKMARK [2][-]{subsection.3.4}{Implementation}{section.3}% 16
-\BOOKMARK [3][-]{subsubsection.3.4.1}{Application Server}{subsection.3.4}% 17
-\BOOKMARK [4][-]{paragraph.3.4.1.1}{REST}{subsubsection.3.4.1}% 18
-\BOOKMARK [4][-]{paragraph.3.4.1.2}{MongoDB}{subsubsection.3.4.1}% 19
-\BOOKMARK [4][-]{paragraph.3.4.1.3}{Nodejs}{subsubsection.3.4.1}% 20
-\BOOKMARK [1][-]{section.4}{Conclusion}{}% 21
-\BOOKMARK [1][-]{section.5}{References}{}% 22
+\BOOKMARK [2][-]{subsection.2.1}{REST}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.2}{Database system}{section.2}% 8
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Relational database database}{subsection.2.2}% 9
+\BOOKMARK [3][-]{subsubsection.2.2.2}{NoSQL database}{subsection.2.2}% 10
+\BOOKMARK [2][-]{subsection.2.3}{Node.js}{section.2}% 11
+\BOOKMARK [2][-]{subsection.2.4}{Docker}{section.2}% 12
+\BOOKMARK [1][-]{section.3}{Design of the backend}{}% 13
+\BOOKMARK [2][-]{subsection.3.1}{Architecture}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.2}{Requirements of the backend}{section.3}% 15
+\BOOKMARK [3][-]{subsubsection.3.2.1}{MongoDB}{subsection.3.2}% 16
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Nodejs}{subsection.3.2}% 17
+\BOOKMARK [1][-]{section.4}{Implementation}{}% 18
+\BOOKMARK [2][-]{subsection.4.1}{Folder structure}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.2}{Nodejs and Express}{section.4}% 20
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Folder structure}{subsection.4.2}% 21
+\BOOKMARK [3][-]{subsubsection.4.2.2}{NPM, package.json and modules}{subsection.4.2}% 22
+\BOOKMARK [3][-]{subsubsection.4.2.3}{aap.js}{subsection.4.2}% 23
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Model}{subsection.4.2}% 24
+\BOOKMARK [3][-]{subsubsection.4.2.5}{Routes and authentication}{subsection.4.2}% 25
+\BOOKMARK [4][-]{paragraph.4.2.5.1}{routes/index}{subsubsection.4.2.5}% 26
+\BOOKMARK [4][-]{paragraph.4.2.5.2}{routes/users and authentication}{subsubsection.4.2.5}% 27
+\BOOKMARK [3][-]{subsubsection.4.2.6}{Views}{subsection.4.2}% 28
+\BOOKMARK [3][-]{subsubsection.4.2.7}{bin/www and start.sh}{subsection.4.2}% 29
+\BOOKMARK [2][-]{subsection.4.3}{Docker Mongo and runsystem.sh}{section.4}% 30
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 31
+\BOOKMARK [1][-]{section.6}{References}{}% 32
